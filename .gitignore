@@ -1,8 +1,6 @@
 # custom
 
-!data/README.md
 data/*
-!license/README.md
 license/*
 
 # Created by https://www.gitignore.io/api/osx,windows,vim
