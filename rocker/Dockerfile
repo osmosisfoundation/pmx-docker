@@ -1,6 +1,14 @@
 FROM rocker/verse:latest
 
-#VOLUME /home/rstudio/data
+# Build-time metadata as defined at http://label-schema.org
+ARG VCS_REF
+LABEL org.label-schema.name="osmosisfoundation/rocker" \
+      org.label-schema.description="A full Rocker rstudio (rocker/verse) with NONMEM and PSN" \
+      org.label-schema.url="http://osmosis.foundation" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url="https://github.com/osmosisfoundation/pmx-docker" \
+      org.label-schema.vendor="Osmosis Foundation" \
+      org.label-schema.schema-version="1.0"
 
 #
 #

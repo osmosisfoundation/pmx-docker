@@ -1,5 +1,15 @@
 FROM osmosisfoundation/psn:latest
 
+# Build-time metadata as defined at http://label-schema.org
+ARG VCS_REF
+LABEL org.label-schema.name="osmosisfoundation/piranajs" \
+      org.label-schema.description="PiranaJS with NONMEM and PSN built-in" \
+      org.label-schema.url="http://osmosis.foundation" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url="https://github.com/osmosisfoundation/pmx-docker" \
+      org.label-schema.vendor="Osmosis Foundation" \
+      org.label-schema.schema-version="1.0"
+
 # perl modules, take forever to build, do them first
 RUN cpanm HTTP::Date \
      && cpanm DBI \

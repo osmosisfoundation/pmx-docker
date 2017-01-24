@@ -1,5 +1,15 @@
 FROM ubuntu:16.04
 
+# Build-time metadata as defined at http://label-schema.org
+ARG VCS_REF
+LABEL org.label-schema.name="osmosisfoundation/nonmem" \
+      org.label-schema.description="NONMEM Installed in a Ubuntu Container" \
+      org.label-schema.url="http://osmosis.foundation" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url="https://github.com/osmosisfoundation/pmx-docker" \
+      org.label-schema.vendor="Osmosis Foundation" \
+      org.label-schema.schema-version="1.0"
+
 ARG NONMEMURL=https://nonmem.iconplc.com/nonmem730/NONMEM7.3.0.zip
 ARG NONMEMZIPPASS=gz952BqZX5
 
