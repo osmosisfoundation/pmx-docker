@@ -1,4 +1,4 @@
-FROM nonmem
+FROM osmosisfoundation/nonmem:latest
 
 # cpanm and PsN requirements
 RUN apt-get update \

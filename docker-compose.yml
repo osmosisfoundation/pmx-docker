@@ -2,12 +2,7 @@ version: '2'
 
 services:
   rocker:
-    image: rocker
-    build:
-      context: ./rocker
-      args:
-        - NONMEMURL=https://nonmem.iconplc.com/nonmem730/NONMEM7.3.0.zip
-        - NONMEMZIPPASS=gz952BqZX5
+    image: osmosisfoundation/rocker:latest
     ports:
       - 8787:8787
     volumes:
@@ -16,11 +11,7 @@ services:
     environment:
       - ROOT=TRUE
   piranajs:
-    image: piranajs
-    build: 
-      context: ./piranajs
-      args:
-        - PIRANAJSSOURCE=piranajs_current_20160601.zip
+    image: osmosisfoundation/piranajs:latest
     ports:
       - 8000:8000
     volumes:
@@ -30,20 +21,14 @@ services:
     depends_on:
       - psn
   psn:
-    image: psn
-    build: ./psn
+    image: osmosisfoundation/psn:latest
     volumes:
       - ./license:/opt/nm730/license
       - ./data:/data
     depends_on:
       - nonmem
   nonmem:
-    image: nonmem
-    build:
-      context: ./nonmem
-      args:
-        - NONMEMURL=https://nonmem.iconplc.com/nonmem730/NONMEM7.3.0.zip
-        - NONMEMZIPPASS=gz952BqZX5
+    image: osmosisfoundation/nonmem:latest
     volumes:
       - ./license:/opt/nm730/license
       - ./data:/data

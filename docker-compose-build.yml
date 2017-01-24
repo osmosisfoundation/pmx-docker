@@ -1,0 +1,50 @@
+version: '2'
+
+services:
+  rocker:
+    image: osmosisfoundation/rocker:local
+    build:
+      context: ./rocker
+      args:
+        - NONMEMURL=https://nonmem.iconplc.com/nonmem730/NONMEM7.3.0.zip
+        - NONMEMZIPPASS=gz952BqZX5
+    ports:
+      - 8787:8787
+    volumes:
+      - ./data:/home/rstudio
+      - ./license:/opt/nm730/license
+    environment:
+      - ROOT=TRUE
+  piranajs:
+    image: osmosisfoundation/piranajs:local
+    build: 
+      context: ./piranajs
+      args:
+        - PIRANAJSSOURCE=piranajs_current_20160601.zip
+    ports:
+      - 8000:8000
+    volumes:
+      - ./license:/opt/nm730/license
+      - ./license:/opt/pirana/license
+      - ./data:/data
+    depends_on:
+      - psn
+  psn:
+    image: osmosisfoundation/psn:local
+    build: ./psn
+    volumes:
+      - ./license:/opt/nm730/license
+      - ./data:/data
+    depends_on:
+      - nonmem
+  nonmem:
+    image: osmosisfoundation/nonmem:local
+    build:
+      context: ./nonmem
+      args:
+        - NONMEMURL=https://nonmem.iconplc.com/nonmem730/NONMEM7.3.0.zip
+        - NONMEMZIPPASS=gz952BqZX5
+    volumes:
+      - ./license:/opt/nm730/license
+      - ./data:/data
+

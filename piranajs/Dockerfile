@@ -1,4 +1,4 @@
-FROM psn
+FROM osmosisfoundation/psn:latest
 
 # perl modules, take forever to build, do them first
 RUN cpanm HTTP::Date \
