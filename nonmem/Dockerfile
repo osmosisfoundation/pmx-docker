@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 ARG NONMEMURL=https://nonmem.iconplc.com/nonmem730/NONMEM7.3.0.zip
-ARG NONMEMZIPPASS
+ARG NONMEMZIPPASS=gz952BqZX5
 
 # Install gfortran, wget, and unzip (then clean up the image
 # as much as possible)
