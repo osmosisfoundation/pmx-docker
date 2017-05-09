@@ -36,7 +36,7 @@ RUN apt-get update \
 ## the image
 RUN cd /tmp \
     && wget --no-verbose --no-check-certificate -O NONMEM.zip ${NONMEM_URL} \
-    && unzip -P ${NONMEM_ZIP_PASS} NONMEM.zip \
+    && unzip -P ${NONMEM_ZIP_PASS_73} NONMEM.zip \
     && cd /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
     && bash SETUP${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} \
                     /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
