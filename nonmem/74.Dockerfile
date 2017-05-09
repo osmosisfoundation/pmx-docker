@@ -10,8 +10,11 @@ LABEL org.label-schema.name="osmosisfoundation/nonmem" \
       org.label-schema.vendor="Osmosis Foundation" \
       org.label-schema.schema-version="1.0"
 
-ARG NONMEMURL=https://nonmem.iconplc.com/nonmem730/NONMEM7.3.0.zip
-ARG NONMEMZIPPASS=gz952BqZX5
+ARG NONMEM_MAJOR_VERSION=7
+ARG NONMEM_MINOR_VERSION=4
+ARG NONMEM_PATCH_VERSION=0
+ARG NONMEM_ZIP_PASS_74
+ENV NONMEM_URL=https://nonmem.iconplc.com/nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}/NONMEM${NONMEM_MAJOR_VERSION}.${NONMEM_MINOR_VERSION}.${NONMEM_PATCH_VERSION}.zip
 
 # Install gfortran, wget, and unzip (then clean up the image
 # as much as possible)
@@ -32,11 +35,12 @@ RUN apt-get update \
 ## Install NONMEM and then clean out unnecessary files to shrink
 ## the image
 RUN cd /tmp \
-    && wget --no-verbose --no-check-certificate -O NONMEM7.3.0.zip ${NONMEMURL} \
-    && unzip -P ${NONMEMZIPPASS} NONMEM7.3.0.zip \
-    && cd /tmp/nm730CD \
-    && bash SETUP73 /tmp/nm730CD \
-       	            /opt/nm730 \
+    && wget --no-verbose --no-check-certificate -O NONMEM.zip ${NONMEM_URL} \
+    && unzip -P ${NONMEM_ZIP_PASS} NONMEM.zip \
+    && cd /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
+    && bash SETUP${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} \
+                    /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
+       	            /opt/nm \
                     gfortran \
                     y \
                     /usr/bin/ar \
@@ -44,12 +48,12 @@ RUN cd /tmp \
                     rec \
                     q \
                     unzip \
-                    nonmem73e.zip \
-                    nonmem73r.zip \
+                    nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}e.zip \
+                    nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}r.zip \
     && rm -r /tmp/* \
-    && rm /opt/nm730/mpi/mpi_ling/libmpich.a \
-    && ln -s /usr/lib/mpich/lib/libmpich.a /opt/nm730/mpi/mpi_ling/libmpich.a \
-    && (cd /opt/nm730 && \
+    && rm /opt/nm/mpi/mpi_ling/libmpich.a \
+    && ln -s /usr/lib/mpich/lib/libmpich.a /opt/nm/mpi/mpi_ling/libmpich.a \
+    && (cd /opt/nm && \
         rm -rf \
             examples/ \
             guides/ \
@@ -110,14 +114,17 @@ RUN cd /tmp \
 # OR, use this VOLUME to mount your license dir at run time
 # which we expect to have a nonmem.lic file in it.
 # e.g. docker run -v license:/opt/nm730/license nonmem
-VOLUME /opt/nm730/license
+VOLUME /opt/nm/license
 
-ENV PATH /opt/nm730/run:$PATH
+ENV PATH /opt/nm/run:$PATH
 
 # map in user data directory
 VOLUME /data
 WORKDIR /data
 
+# link nmfe to specific version so we can use a consistant ENTRYPOINT
+RUN ln -s /opt/nm/run/nmfe${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} /opt/nm/run/nmfe
+
 # expects in and out files specified at runtime
-ENTRYPOINT ["/opt/nm730/run/nmfe73"]
+ENTRYPOINT ["/opt/nm/run/nmfe"]
 CMD ["--help"]

@@ -32,7 +32,7 @@ cp -f ../data/$INPUT ../data/$DATAFILE $DATADIR
 
 # start container, which will auto remove once command is complete
 # TODO check for existence of license file
-docker run --rm -v $(pwd)/license:/opt/nm730/license -v $(pwd)/$DATADIR:/data nonmem $INPUT $OUTPUT
+docker run --rm -v $(pwd)/license:/opt/nm/license -v $(pwd)/$DATADIR:/data nonmem $INPUT $OUTPUT
 
 # cleanup
 # TODO if --clean given, delete, otherwise move to subfolder

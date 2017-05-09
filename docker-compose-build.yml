@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   rocker:
@@ -6,13 +6,12 @@ services:
     build:
       context: ./rocker
       args:
-        - NONMEMURL=https://nonmem.iconplc.com/nonmem730/NONMEM7.3.0.zip
-        - NONMEMZIPPASS=gz952BqZX5
+        - NONMEMZIPPASS=YOURPASSHERE
     ports:
       - 8787:8787
     volumes:
       - ./data:/home/rstudio
-      - ./license:/opt/nm730/license
+      - ./license:/opt/nm/license
     environment:
       - ROOT=TRUE
   piranajs:
@@ -24,7 +23,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./license:/opt/nm730/license
+      - ./license:/opt/nm/license
       - ./license:/opt/pirana/license
       - ./data:/data
     depends_on:
@@ -33,7 +32,7 @@ services:
     image: osmosisfoundation/psn:local
     build: ./psn
     volumes:
-      - ./license:/opt/nm730/license
+      - ./license:/opt/nm/license
       - ./data:/data
     depends_on:
       - nonmem
@@ -41,10 +40,10 @@ services:
     image: osmosisfoundation/nonmem:local
     build:
       context: ./nonmem
+      dockerfile: 73.Dockerfile
       args:
-        - NONMEMURL=https://nonmem.iconplc.com/nonmem730/NONMEM7.3.0.zip
-        - NONMEMZIPPASS=gz952BqZX5
+        - NONMEMZIPPASS=YOURPASSHERE
     volumes:
-      - ./license:/opt/nm730/license
+      - ./license:/opt/nm/license
       - ./data:/data
 

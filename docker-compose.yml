@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   rocker:
@@ -7,7 +7,7 @@ services:
       - 8787:8787
     volumes:
       - ./data:/home/rstudio
-      - ./license:/opt/nm730/license
+      - ./license:/opt/nm/license
     environment:
       - ROOT=TRUE
   piranajs:
@@ -15,7 +15,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./license:/opt/nm730/license
+      - ./license:/opt/nm/license
       - ./license:/opt/pirana/license
       - ./data:/data
     depends_on:
@@ -23,13 +23,13 @@ services:
   psn:
     image: osmosisfoundation/psn:latest
     volumes:
-      - ./license:/opt/nm730/license
+      - ./license:/opt/nm/license
       - ./data:/data
     depends_on:
       - nonmem
   nonmem:
     image: osmosisfoundation/nonmem:latest
     volumes:
-      - ./license:/opt/nm730/license
+      - ./license:/opt/nm/license
       - ./data:/data
 
