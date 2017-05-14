@@ -1,0 +1,2 @@
+#!/bin/bash
+docker build --build-arg NONMEM_ZIP_PASS_73=$NONMEM_ZIP_PASS_73 --build-arg NONMEM_ZIP_PASS_74=$NONMEM_ZIP_PASS_74 -t $IMAGE_NAME

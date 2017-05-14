@@ -14,7 +14,6 @@ ARG NONMEM_MAJOR_VERSION=7
 ARG NONMEM_MINOR_VERSION=3
 ARG NONMEM_PATCH_VERSION=0
 ARG NONMEM_ZIP_PASS_73
-ENV NONMEM_URL=https://nonmem.iconplc.com/nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}/NONMEM${NONMEM_MAJOR_VERSION}.${NONMEM_MINOR_VERSION}.${NONMEM_PATCH_VERSION}.zip
 
 # Install gfortran, wget, and unzip (then clean up the image
 # as much as possible)
@@ -35,7 +34,8 @@ RUN apt-get update \
 ## Install NONMEM and then clean out unnecessary files to shrink
 ## the image
 RUN cd /tmp \
-    && wget --no-verbose --no-check-certificate -O NONMEM.zip ${NONMEM_URL} \
+    && wget --no-verbose --no-check-certificate -O NONMEM.zip \
+    https://nonmem.iconplc.com/nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}/NONMEM${NONMEM_MAJOR_VERSION}.${NONMEM_MINOR_VERSION}.${NONMEM_PATCH_VERSION}.zip \
     && unzip -P ${NONMEM_ZIP_PASS_73} NONMEM.zip \
     && cd /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
     && bash SETUP${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} \

@@ -45,7 +45,7 @@ RUN git clone https://github.com/ronkeizer/apirana.git \
     && ln -s /opt/pirana/apirana/apirana /usr/bin/apirana
 
 # specify your source file at build time
-ARG PIRANAJSSOURCE=piranajs_current_20160601.zip
+ARG PIRANAJSSOURCE=piranajs_current_20170322.zip
 
 COPY $PIRANAJSSOURCE /opt/pirana/piranajs_current.zip
 
