@@ -6,7 +6,8 @@ services:
     build:
       context: ./rocker
       args:
-        - NONMEMZIPPASS=YOURPASSHERE
+        - NONMEM_ZIP_PASS_73=YOURPASSHERE
+        - NONMEM_ZIP_PASS_74=YOURPASSHERE
     ports:
       - 8787:8787
     volumes:
@@ -18,8 +19,6 @@ services:
     image: osmosisfoundation/piranajs:local
     build: 
       context: ./piranajs
-      args:
-        - PIRANAJSSOURCE=piranajs_current_20160601.zip
     ports:
       - 8000:8000
     volumes:
@@ -42,7 +41,8 @@ services:
       context: ./nonmem
       dockerfile: 73.Dockerfile
       args:
-        - NONMEMZIPPASS=YOURPASSHERE
+        - NONMEM_ZIP_PASS_73=YOURPASSHERE
+        - NONMEM_ZIP_PASS_74=YOURPASSHERE
     volumes:
       - ./license:/opt/nm/license
       - ./data:/data

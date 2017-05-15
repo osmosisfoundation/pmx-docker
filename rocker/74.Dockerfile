@@ -1,20 +1,22 @@
-FROM ubuntu:16.04
+FROM rocker/verse:latest
 
 # Build-time metadata as defined at http://label-schema.org
 ARG VCS_REF
-LABEL org.label-schema.name="osmosisfoundation/nonmem" \
-      org.label-schema.description="NONMEM Installed in a Ubuntu Container" \
+LABEL org.label-schema.name="osmosisfoundation/rocker" \
+      org.label-schema.description="A full Rocker rstudio (rocker/verse) with NONMEM and PSN" \
       org.label-schema.url="http://osmosis.foundation" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/osmosisfoundation/pmx-docker" \
       org.label-schema.vendor="Osmosis Foundation" \
       org.label-schema.schema-version="1.0"
 
-# Set version and password
+#
+# lets add nonmem so we can run it from rocker gui
+#
 ARG NONMEM_MAJOR_VERSION=7
-ARG NONMEM_MINOR_VERSION=3
+ARG NONMEM_MINOR_VERSION=4
 ARG NONMEM_PATCH_VERSION=0
-ARG NONMEM_ZIP_PASS_73
+ARG NONMEM_ZIP_PASS_74
 
 # Install gfortran, wget, and unzip (then clean up the image
 # as much as possible)
@@ -37,7 +39,7 @@ RUN apt-get update \
 RUN cd /tmp \
     && wget --no-verbose --no-check-certificate -O NONMEM.zip \
     https://nonmem.iconplc.com/nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}/NONMEM${NONMEM_MAJOR_VERSION}.${NONMEM_MINOR_VERSION}.${NONMEM_PATCH_VERSION}.zip \
-    && unzip -P ${NONMEM_ZIP_PASS_73} NONMEM.zip \
+    && unzip -P ${NONMEM_ZIP_PASS_74} NONMEM.zip \
     && cd /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
     && bash SETUP${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} \
                     /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
@@ -119,13 +121,84 @@ VOLUME /opt/nm/license
 
 ENV PATH /opt/nm/run:$PATH
 
-# map in user data directory
-VOLUME /data
-WORKDIR /data
-
 # link nmfe to specific version so we can use a consistant ENTRYPOINT
 RUN ln -s /opt/nm/run/nmfe${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} /opt/nm/run/nmfe
 
-# expects in and out files specified at runtime
-ENTRYPOINT ["/opt/nm/run/nmfe"]
-CMD ["--help"]
+#
+#
+# done installing nonmem
+#
+#
+
+
+#
+#
+# lets install psn on top of nonmem
+#
+#
+
+# cpanm and PsN requirements
+RUN apt-get update \
+ && apt-get -y --no-install-recommends install ca-certificates \
+ gcc \
+ build-essential \
+ curl \
+ expect \
+ && rm -fr /var/lib/apt/lists/* \
+ && wget -qO- \
+	https://raw.githubusercontent.com/miyagawa/cpanminus/master/cpanm | \
+	perl - --skip-satisfied App::cpanminus \
+ && rm -r ~/.cpanm \
+ && cpanm \
+	Math::Random \
+	Statistics::Distributions \
+	Archive::Zip \
+	File::Copy::Recursive \
+	Storable \
+	Moose \
+	MooseX::Params::Validate
+
+WORKDIR /tmp
+
+# install PsN
+RUN curl -SL http://downloads.sourceforge.net/project/psn/PsN-4.6.0.tar.gz -o PsN-4.6.0.tar.gz \
+ && tar -zxf /tmp/PsN-4.6.0.tar.gz \
+ && cd /tmp/PsN-Source \
+ && expect -c "spawn perl setup.pl; \
+	expect -ex \"/usr/bin]:\"; \
+	send \"\r\"; \
+	expect -ex \"/usr/bin/perl]:\"; \
+	send \"\r\"; \
+	expect -ex \"/usr/local/share/perl\"; \
+	send \"\r\"; \
+	expect -ex \"check Perl modules\"; \
+	send \"y\r\"; \
+	expect -ex \"are missing)\"; \
+	send \"y\r\"; \
+	expect -ex \"of your choice?\"; \
+	send \"n\r\"; \
+	expect -ex \"test library?\"; \
+	send \"y\r\"; \
+	expect -ex \"/usr/local/share/perl\"; \
+	send \"\r\"; \
+	expect -ex \"configuration file?\"; \
+	send \"y\r\"; \
+    expect -ex \"NM-installation directory:\"; \
+	send \"/opt/nm\r\"; \
+	expect -ex \"add another one\"; \
+	send \"n\r\"; \
+	expect -ex \"name nm\"; \
+	send \"\r\"; \
+	expect -ex \"installation program.\"; \
+	send \"\r\";" \
+  && rm -rf /tmp/*
+
+#
+#
+# done installing psn
+#
+#
+
+WORKDIR /home/rstudio
+
+CMD ["/init"]

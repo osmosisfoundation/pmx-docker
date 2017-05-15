@@ -11,12 +11,12 @@ LABEL org.label-schema.name="osmosisfoundation/rocker" \
       org.label-schema.schema-version="1.0"
 
 #
-#
 # lets add nonmem so we can run it from rocker gui
 #
-#
-ARG NONMEMURL=https://nonmem.iconplc.com/nonmem730/NONMEM7.3.0.zip
-ARG NONMEMZIPPASS=gz952BqZX5
+ARG NONMEM_MAJOR_VERSION=7
+ARG NONMEM_MINOR_VERSION=3
+ARG NONMEM_PATCH_VERSION=0
+ARG NONMEM_ZIP_PASS_73
 
 # Install gfortran, wget, and unzip (then clean up the image
 # as much as possible)
@@ -37,11 +37,13 @@ RUN apt-get update \
 ## Install NONMEM and then clean out unnecessary files to shrink
 ## the image
 RUN cd /tmp \
-    && wget --no-verbose --no-check-certificate -O NONMEM7.3.0.zip ${NONMEMURL} \
-    && unzip -P ${NONMEMZIPPASS} NONMEM7.3.0.zip \
-    && cd /tmp/nm730CD \
-    && bash SETUP73 /tmp/nm730CD \
-       	            /opt/nm730 \
+    && wget --no-verbose --no-check-certificate -O NONMEM.zip \
+    https://nonmem.iconplc.com/nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}/NONMEM${NONMEM_MAJOR_VERSION}.${NONMEM_MINOR_VERSION}.${NONMEM_PATCH_VERSION}.zip \
+    && unzip -P ${NONMEM_ZIP_PASS_73} NONMEM.zip \
+    && cd /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
+    && bash SETUP${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} \
+                    /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
+       	            /opt/nm \
                     gfortran \
                     y \
                     /usr/bin/ar \
@@ -49,12 +51,12 @@ RUN cd /tmp \
                     rec \
                     q \
                     unzip \
-                    nonmem73e.zip \
-                    nonmem73r.zip \
+                    nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}e.zip \
+                    nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}r.zip \
     && rm -r /tmp/* \
-    && rm /opt/nm730/mpi/mpi_ling/libmpich.a \
-    && ln -s /usr/lib/mpich/lib/libmpich.a /opt/nm730/mpi/mpi_ling/libmpich.a \
-    && (cd /opt/nm730 && \
+    && rm /opt/nm/mpi/mpi_ling/libmpich.a \
+    && ln -s /usr/lib/mpich/lib/libmpich.a /opt/nm/mpi/mpi_ling/libmpich.a \
+    && (cd /opt/nm && \
         rm -rf \
             examples/ \
             guides/ \
@@ -115,9 +117,12 @@ RUN cd /tmp \
 # OR, use this VOLUME to mount your license dir at run time
 # which we expect to have a nonmem.lic file in it.
 # e.g. docker run -v license:/opt/nm730/license nonmem
-VOLUME /opt/nm730/license
+VOLUME /opt/nm/license
 
-ENV PATH /opt/nm730/run:$PATH
+ENV PATH /opt/nm/run:$PATH
+
+# link nmfe to specific version so we can use a consistant ENTRYPOINT
+RUN ln -s /opt/nm/run/nmfe${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} /opt/nm/run/nmfe
 
 #
 #
@@ -178,9 +183,11 @@ RUN curl -SL http://downloads.sourceforge.net/project/psn/PsN-4.6.0.tar.gz -o Ps
 	send \"\r\"; \
 	expect -ex \"configuration file?\"; \
 	send \"y\r\"; \
+	expect -ex \"NM-installation directory:\"; \
+	send \"/opt/nm\r\"; \
 	expect -ex \"add another one\"; \
 	send \"n\r\"; \
-	expect -ex \"name nm730\"; \
+	expect -ex \"name nm\"; \
 	send \"\r\"; \
 	expect -ex \"installation program.\"; \
 	send \"\r\";" \
