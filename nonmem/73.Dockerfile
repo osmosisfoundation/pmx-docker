@@ -111,10 +111,10 @@ RUN cd /tmp \
             util/finish_SunOS*)
 
 ## Copy the current license file into the image
-#COPY license/nonmem.lic /opt/nm730/license/nonmem.lic
+#COPY license/nonmem.lic /opt/nm/license/nonmem.lic
 # OR, use this VOLUME to mount your license dir at run time
 # which we expect to have a nonmem.lic file in it.
-# e.g. docker run -v license:/opt/nm730/license nonmem
+# e.g. docker run -v license:/opt/nm/license nonmem
 VOLUME /opt/nm/license
 
 ENV PATH /opt/nm/run:$PATH
