@@ -13,7 +13,7 @@ LABEL org.label-schema.name="osmosisfoundation/nonmem" \
 ARG NONMEM_MAJOR_VERSION=7
 ARG NONMEM_MINOR_VERSION=4
 ARG NONMEM_PATCH_VERSION=1
-ARG NONMEM_ZIP_PASS_74
+ARG NONMEM_ZIP_PASS
 ENV NONMEM_URL=https://nonmem.iconplc.com/nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}/NONMEM${NONMEM_MAJOR_VERSION}.${NONMEM_MINOR_VERSION}.${NONMEM_PATCH_VERSION}.zip
 
 # Install gfortran, wget, and unzip (then clean up the image
@@ -36,7 +36,7 @@ RUN apt-get update \
 ## the image
 RUN cd /tmp \
     && wget --no-verbose --no-check-certificate -O NONMEM.zip ${NONMEM_URL} \
-    && unzip -P ${NONMEM_ZIP_PASS_74} NONMEM.zip \
+    && unzip -P ${NONMEM_ZIP_PASS} NONMEM.zip \
     && cd /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
     && bash SETUP${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} \
                     /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
