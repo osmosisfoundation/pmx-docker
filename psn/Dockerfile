@@ -72,11 +72,13 @@ RUN curl -SL https://github.com/UUPharmacometrics/PsN/releases/download/4.7.0/Ps
 	send \"\r\";" \
   && sed s/threads=5/threads=$NUM_THREADS/ /usr/local/share/perl/*/PsN_4*/psn.conf > psn.conf.tmp \
   && mv psn.conf.tmp /usr/local/share/perl/*/PsN_4*/psn.conf \
-  && if [ -n "$NONMEM_LICENSE_STRING" ]; then echo $NONMEM_LICENSE_STRING > /opt/nm/license/nonmem.lic ; fi \
-  && cd /usr/local/share/perl/*/PsN_test* \
-  && prove -r unit \
-  && prove -r system \
-  && rm -r /usr/local/share/perl/*/PsN_test* \
+  && if [ -n "$NONMEM_LICENSE_STRING" ]; then \
+      echo $NONMEM_LICENSE_STRING > /opt/nm/license/nonmem.lic \
+      && cd /usr/local/share/perl/*/PsN_test* \
+      && prove -r unit \
+      && prove -r system \
+      && rm -r /usr/local/share/perl/*/PsN_test* \
+  ; fi \
   && rm -rf /tmp/*
  
 WORKDIR /data
