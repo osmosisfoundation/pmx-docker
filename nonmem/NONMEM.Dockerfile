@@ -13,6 +13,7 @@ LABEL org.label-schema.name="osmosisfoundation/nonmem" \
 ARG NONMEM_MAJOR_VERSION=7
 ARG NONMEM_MINOR_VERSION=4
 ARG NONMEM_PATCH_VERSION=1
+ARG NONMEM_LICENSE_STRING=""
 ARG NONMEM_ZIP_PASS
 ENV NONMEM_URL=https://nonmem.iconplc.com/nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}/NONMEM${NONMEM_MAJOR_VERSION}.${NONMEM_MINOR_VERSION}.${NONMEM_PATCH_VERSION}.zip
 
@@ -38,6 +39,7 @@ RUN cd /tmp \
     && wget --no-verbose --no-check-certificate -O NONMEM.zip ${NONMEM_URL} \
     && unzip -P ${NONMEM_ZIP_PASS} NONMEM.zip \
     && cd /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
+    && if [ -n "$NONMEM_LICENSE_STRING" ]; then mkdir -p /opt/nm/license; echo $NONMEM_LICENSE_STRING > /opt/nm/license/nonmem.lic ; fi \
     && bash SETUP${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} \
                     /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
        	            /opt/nm \
