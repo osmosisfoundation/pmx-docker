@@ -10,11 +10,11 @@ LABEL org.label-schema.name="osmosisfoundation/nonmem" \
       org.label-schema.vendor="Osmosis Foundation" \
       org.label-schema.schema-version="1.0"
 
-# Set version and password
 ARG NONMEM_MAJOR_VERSION=7
-ARG NONMEM_MINOR_VERSION=3
-ARG NONMEM_PATCH_VERSION=0
-ARG NONMEM_ZIP_PASS_73
+ARG NONMEM_MINOR_VERSION=4
+ARG NONMEM_PATCH_VERSION=1
+ARG NONMEM_ZIP_PASS
+ENV NONMEM_URL=https://nonmem.iconplc.com/nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}/NONMEM${NONMEM_MAJOR_VERSION}.${NONMEM_MINOR_VERSION}.${NONMEM_PATCH_VERSION}.zip
 
 # Install gfortran, wget, and unzip (then clean up the image
 # as much as possible)
@@ -35,9 +35,8 @@ RUN apt-get update \
 ## Install NONMEM and then clean out unnecessary files to shrink
 ## the image
 RUN cd /tmp \
-    && wget --no-verbose --no-check-certificate -O NONMEM.zip \
-    https://nonmem.iconplc.com/nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}/NONMEM${NONMEM_MAJOR_VERSION}.${NONMEM_MINOR_VERSION}.${NONMEM_PATCH_VERSION}.zip \
-    && unzip -P ${NONMEM_ZIP_PASS_73} NONMEM.zip \
+    && wget --no-verbose --no-check-certificate -O NONMEM.zip ${NONMEM_URL} \
+    && unzip -P ${NONMEM_ZIP_PASS} NONMEM.zip \
     && cd /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
     && bash SETUP${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} \
                     /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
@@ -111,10 +110,10 @@ RUN cd /tmp \
             util/finish_SunOS*)
 
 ## Copy the current license file into the image
-#COPY license/nonmem.lic /opt/nm730/license/nonmem.lic
+#COPY license/nonmem.lic /opt/nm/license/nonmem.lic
 # OR, use this VOLUME to mount your license dir at run time
 # which we expect to have a nonmem.lic file in it.
-# e.g. docker run -v license:/opt/nm730/license nonmem
+# e.g. docker run -v license:/opt/nm/license nonmem
 VOLUME /opt/nm/license
 
 ENV PATH /opt/nm/run:$PATH
