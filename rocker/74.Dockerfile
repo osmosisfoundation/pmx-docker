@@ -15,7 +15,7 @@ LABEL org.label-schema.name="osmosisfoundation/rocker" \
 #
 ARG NONMEM_MAJOR_VERSION=7
 ARG NONMEM_MINOR_VERSION=4
-ARG NONMEM_PATCH_VERSION=0
+ARG NONMEM_PATCH_VERSION=1
 ARG NONMEM_ZIP_PASS_74
 
 # Install gfortran, wget, and unzip (then clean up the image
