@@ -12,7 +12,7 @@ LABEL org.label-schema.name="osmosisfoundation/nonmem" \
 
 ARG NONMEM_MAJOR_VERSION=7
 ARG NONMEM_MINOR_VERSION=4
-ARG NONMEM_PATCH_VERSION=0
+ARG NONMEM_PATCH_VERSION=1
 ARG NONMEM_ZIP_PASS_74
 ENV NONMEM_URL=https://nonmem.iconplc.com/nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}/NONMEM${NONMEM_MAJOR_VERSION}.${NONMEM_MINOR_VERSION}.${NONMEM_PATCH_VERSION}.zip
 
@@ -20,17 +20,18 @@ ENV NONMEM_URL=https://nonmem.iconplc.com/nonmem${NONMEM_MAJOR_VERSION}${NONMEM_
 # as much as possible)
 RUN apt-get update \
     && apt-get install --yes --no-install-recommends \
-       ca-certificates \
-       gfortran \
-       libmpich-dev \
-       mpich \
-       wget \
-       unzip \
-    && rm -rf /var/lib/apt/lists/ \
-              /var/cache/apt/archives/ \
-	      /usr/share/doc/ \
-	      /usr/share/man/ \
-	      /usr/share/locale/
+        ca-certificates \
+        gfortran \
+        libmpich-dev \
+        mpich \
+        wget \
+        unzip \
+    && rm -rf \
+        /var/lib/apt/lists/ \
+        /var/cache/apt/archives/ \
+	    /usr/share/doc/ \
+	    /usr/share/man/ \
+	    /usr/share/locale/
 
 ## Install NONMEM and then clean out unnecessary files to shrink
 ## the image
@@ -39,17 +40,17 @@ RUN cd /tmp \
     && unzip -P ${NONMEM_ZIP_PASS_74} NONMEM.zip \
     && cd /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
     && bash SETUP${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} \
-                    /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
-       	            /opt/nm \
-                    gfortran \
-                    y \
-                    /usr/bin/ar \
-                    same \
-                    rec \
-                    q \
-                    unzip \
-                    nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}e.zip \
-                    nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}r.zip \
+        /tmp/nm${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}${NONMEM_PATCH_VERSION}CD \
+        /opt/nm \
+        gfortran \
+        y \
+        /usr/bin/ar \
+        same \
+        rec \
+        q \
+        unzip \
+        nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}e.zip \
+        nonmem${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION}r.zip \
     && rm -r /tmp/* \
     && rm /opt/nm/mpi/mpi_ling/libmpich.a \
     && ln -s /usr/lib/mpich/lib/libmpich.a /opt/nm/mpi/mpi_ling/libmpich.a \
