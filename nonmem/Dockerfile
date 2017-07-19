@@ -10,7 +10,9 @@ LABEL org.label-schema.name="osmosisfoundation/nonmem" \
       org.label-schema.vendor="Osmosis Foundation" \
       org.label-schema.schema-version="1.0"
 
+#
 # Set version, zip password, and download url
+#
 ARG NONMEM_MAJOR_VERSION=7
 ARG NONMEM_MINOR_VERSION=4
 ARG NONMEM_PATCH_VERSION=1
@@ -111,10 +113,10 @@ RUN cd /tmp \
 
 ENV PATH /opt/nm/run:$PATH
 
-WORKDIR /data
-
-# link nmfe to specific version so we can use a consistant ENTRYPOINT
+# link nmfe to specific version so we can use a consistent ENTRYPOINT
 RUN ln -s /opt/nm/run/nmfe${NONMEM_MAJOR_VERSION}${NONMEM_MINOR_VERSION} /opt/nm/run/nmfe
+
+WORKDIR /data
 
 # expects in and out files specified at runtime
 ENTRYPOINT ["/opt/nm/run/nmfe"]

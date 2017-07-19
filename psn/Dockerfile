@@ -34,7 +34,6 @@ RUN apt-get update \
 		Test::Exception \
 		YAML::Tiny
 
-
 WORKDIR /tmp
 
 # install PsN
