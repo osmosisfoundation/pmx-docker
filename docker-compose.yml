@@ -9,7 +9,7 @@ services:
       - ./data:/home/rstudio
       - ./license:/opt/nm/license
     environment:
-      - ROOT=TRUE
+      ROOT: 'TRUE'
   piranajs:
     image: osmosisfoundation/piranajs:latest
     ports:
@@ -18,15 +18,13 @@ services:
       - ./license:/opt/nm/license
       - ./license:/opt/pirana/license
       - ./data:/data
-    depends_on:
-      - psn
   psn:
     image: osmosisfoundation/psn:latest
     volumes:
       - ./license:/opt/nm/license
       - ./data:/data
-    depends_on:
-      - nonmem
+    environment:
+      NUM_THREADS: '4'
   nonmem:
     image: osmosisfoundation/nonmem:latest
     volumes:

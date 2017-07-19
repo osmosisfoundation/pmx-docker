@@ -2,21 +2,21 @@ version: '3'
 
 services:
   rocker:
-    image: osmosisfoundation/rocker:local
+    image: osmosisfoundation/rocker:latest
     build:
       context: ./rocker
       args:
-        - NONMEM_ZIP_PASS_73=YOURPASSHERE
-        - NONMEM_ZIP_PASS_74=YOURPASSHERE
+        - NONMEM_ZIP_PASS_73=${NONMEM_ZIP_PASS_73}
+        - NONMEM_ZIP_PASS_74=${NONMEM_ZIP_PASS_74}
     ports:
       - 8787:8787
     volumes:
       - ./data:/home/rstudio
       - ./license:/opt/nm/license
     environment:
-      - ROOT=TRUE
+      ROOT: 'TRUE'
   piranajs:
-    image: osmosisfoundation/piranajs:local
+    image: osmosisfoundation/piranajs:latest
     build: 
       context: ./piranajs
     ports:
@@ -28,21 +28,23 @@ services:
     depends_on:
       - psn
   psn:
-    image: osmosisfoundation/psn:local
+    image: osmosisfoundation/psn:latest
     build: ./psn
     volumes:
       - ./license:/opt/nm/license
       - ./data:/data
+    environment:
+      NUM_THREADS: '4'
     depends_on:
       - nonmem
   nonmem:
-    image: osmosisfoundation/nonmem:local
+    image: osmosisfoundation/nonmem:latest
     build:
       context: ./nonmem
-      dockerfile: 73.Dockerfile
+      dockerfile: 74.Dockerfile
       args:
-        - NONMEM_ZIP_PASS_73=YOURPASSHERE
-        - NONMEM_ZIP_PASS_74=YOURPASSHERE
+        - NONMEM_ZIP_PASS_73=${NONMEM_ZIP_PASS_73}
+        - NONMEM_ZIP_PASS_74=${NONMEM_ZIP_PASS_74}
     volumes:
       - ./license:/opt/nm/license
       - ./data:/data
