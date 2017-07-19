@@ -8,6 +8,6 @@ docker run --rm \
     -p 8000:8000 \
     -it \
     --entrypoint bash \
-    piranajs
+    osmosisfoundation/piranajs:latest
 
 
