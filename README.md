@@ -51,7 +51,7 @@ The main goals of this project are:
     - Default piranajs install will be accessible at `http://localhost:8000`
     - If using Docker Toolbox, replace `localhost` with `192.168.99.100`
 
-### Advanced usage
+## Advanced Usage
 
 1. If you want to build your own images rather then use our prebuilt ones, you can use the alternate compose file like so: `docker-compose -f docker-compose-build.yml run nonmem <options>` and it will build the `Dockerfile` in the nonmem directory.
 2. Would you like to override settings in `docker-compose.yml` without changing files in this repo (makes it easier to update with `git pull`), then create a copy as `docker-compose.override.yml` and delete everything except what you want to change (e.g. volume bind mount location), that file name is ignored by this git repo, and will automatically be used when running `docker-compose`. More information [at the Docker Docs](https://docs.docker.com/compose/extends/#multiple-compose-files).
