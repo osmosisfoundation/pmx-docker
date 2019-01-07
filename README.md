@@ -45,7 +45,7 @@ The main goals of this project are:
 8. You can run PsN the same way:
     - `docker-compose run psn <psn options>` 
 9. To launch a rocker or piranajs server, use the `up` command:
-    - `docker-compose up rocker` or `docker-compose up piranaja`
+    - `docker-compose up rocker` or `docker-compose up piranajs`
     - To run them in background add `-d` after the `up`
     - Default rocker install will be accessible at `http://localhost:8787`
     - Default piranajs install will be accessible at `http://localhost:8000`
